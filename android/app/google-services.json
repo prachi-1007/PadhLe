@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "573217891950",
+    "project_id": "padhle-a58d3",
+    "storage_bucket": "padhle-a58d3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573217891950:android:9afc47074e26e2059b687f",
+        "android_client_info": {
+          "package_name": "com.example.padho"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuWetk3cV8_8NYp2HmFRhXQGwPrtlTo34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

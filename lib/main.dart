@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'screens/splash.dart';
-import 'theme/app_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+import 'firebase_options.dart';
+import 'screens/splash.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const PadhLe());
 }
 
@@ -14,9 +22,6 @@ class PadhLe extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PadhLe',
-
-      theme: AppTheme.lightTheme,
-
       home: const SplashScreen(),
     );
   }
