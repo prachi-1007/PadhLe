@@ -25,6 +25,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -268,14 +269,14 @@ class HomeScreen extends StatelessWidget {
 
         const SizedBox(height: 10),
 
-        const Text(
-          "Hello, Prachi 👋",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Color(0xff2D2D2D),
-          ),
-        ),
+        Text(
+  "Hello, ${user?.displayName ?? "Student"} 👋",
+  style: const TextStyle(
+    fontSize: 30,
+    fontWeight: FontWeight.bold,
+    color: Color(0xff2D2D2D),
+  ),
+),
 
         const SizedBox(height: 8),
 

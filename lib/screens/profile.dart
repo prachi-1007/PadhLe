@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -110,14 +111,14 @@ class ProfileScreen extends StatelessWidget {
 
                   const SizedBox(height: 18),
 
-                  const Text(
-                    "Prachi Chandra",
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff4B3FBD),
-                    ),
-                  ),
+                 Text(
+user?.displayName ?? "Student",
+  style: const TextStyle(
+    fontSize: 26,
+    fontWeight: FontWeight.bold,
+    color: Color(0xff4B3FBD),
+  ),
+),
 
                   const SizedBox(height: 6),
 

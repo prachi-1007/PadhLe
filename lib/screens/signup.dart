@@ -55,13 +55,11 @@ class _SignupScreenState extends State<SignupScreen> {
     try {
 
 
-      final user = await authService.signUp(
-
-        email: emailController.text.trim(),
-
-        password: passwordController.text.trim(),
-
-      );
+    final user = await authService.signUp(
+  name: nameController.text.trim(),
+  email: emailController.text.trim(),
+  password: passwordController.text.trim(),
+);
 
 
 
