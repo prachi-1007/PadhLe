@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SubjectScreen extends StatelessWidget {
   final String subject;
+  final String semester;
+  final String type;
 
   const SubjectScreen({
     super.key,
     required this.subject,
+    required this.semester,
+    required this.type,
   });
 
-  final List<String> resources = const [
-    "Module 1 Notes.pdf",
-    "Module 2 Notes.pdf",
-    "Module 3 Notes.pdf",
-    "Module 4 Notes.pdf",
-    "Module 5 Notes.pdf",
-    "Lab Manual.pdf",
-    "PPT Slides.pdf",
-    "Important Questions.pdf",
-  ];
+  Future<void> openPdf(String url) async {
+    final Uri uri = Uri.parse(url);
+
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw Exception("Could not open PDF");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +79,7 @@ class SubjectScreen extends StatelessWidget {
                   const SizedBox(height: 8),
 
                   Text(
-                    "${resources.length} Resources Available",
+                    "$type Resources",
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 16,
@@ -101,95 +104,88 @@ class SubjectScreen extends StatelessWidget {
             const SizedBox(height: 18),
 
             Expanded(
-              child: ListView.builder(
-                itemCount: resources.length,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("resources")
+                    .where("sem",
+                        isEqualTo: semester.replaceAll("Semester ", ""))
+                    .where("subject", isEqualTo: subject)
+                    .where("type", isEqualTo: type.toLowerCase())
+                    .snapshots(),
 
-                itemBuilder: (context, index) {
+                builder: (context, snapshot) {
+print("Semester = ${semester.replaceAll("Semester ", "")}");
+print("Subject = $subject");
+print("Type = ${type.toLowerCase()}");
+                  if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-                  return ResourceTile(
-                    title: resources[index],
+                  if (!snapshot.hasData ||
+                      snapshot.data!.docs.isEmpty) {
+                    return const Center(
+                      child: Text("No resources available"),
+                    );
+                  }
+
+                  final docs = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    itemCount: docs.length,
+
+                    itemBuilder: (context, index) {
+
+                      final data = docs[index];
+
+                      return Card(
+                        elevation: 3,
+                        margin:
+                            const EdgeInsets.only(bottom: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(18),
+                        ),
+
+                        child: ListTile(
+
+                          leading: const Icon(
+                            Icons.picture_as_pdf,
+                            color: Colors.red,
+                          ),
+
+                          title: Text(data["title"]),
+
+                          trailing: const Icon(
+                            Icons.open_in_new,
+                            color: Color(0xff6C63FF),
+                          ),
+onTap: () async {
+  print("Tapped!");
+  print(data["pdfUrl"]);
+
+  final Uri uri = Uri.parse(data["pdfUrl"]);
+
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    );
+  } else {
+    print("Could not launch ${data["pdfUrl"]}");
+  }
+},
+                        ),
+                      );
+                    },
                   );
-
                 },
               ),
             ),
 
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class ResourceTile extends StatelessWidget {
-  final String title;
-
-  const ResourceTile({
-    super.key,
-    required this.title,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      shadowColor: Colors.black12,
-      color: Colors.white,
-
-      margin: const EdgeInsets.only(bottom: 16),
-
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
-
-      child: InkWell(
-        borderRadius: BorderRadius.circular(18),
-
-        onTap: () {
-          // Firebase PDF will open here later
-        },
-
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-
-          child: Row(
-            children: [
-
-              Container(
-                height: 52,
-                width: 52,
-
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(.12),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-
-                child: const Icon(
-                  Icons.picture_as_pdf_rounded,
-                  color: Colors.red,
-                ),
-              ),
-
-              const SizedBox(width: 18),
-
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xff2D2D2D),
-                  ),
-                ),
-              ),
-
-              const Icon(
-                Icons.download_rounded,
-                color: Color(0xff6C63FF),
-              ),
-
-            ],
-          ),
         ),
       ),
     );

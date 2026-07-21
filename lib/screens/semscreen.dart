@@ -9,87 +9,35 @@ class SemScreen extends StatelessWidget {
     required this.semester,
   });
 
-  // Subjects for each semester
   List<String> getSubjects() {
     switch (semester) {
       case "Semester 1":
         return [
-          "Mathematics I",
-          "Physics",
-          "Programming in C",
-          "English",
-          "Engineering Graphics",
-          "Basic Electronics",
+          "MAC11",
+          "PYC21",
+          "PSCCS14",
+          "HSCP15",
+          "HSCP16",
+          "MELC19",
         ];
 
       case "Semester 2":
         return [
-          "Mathematics II",
-          "Chemistry",
-          "Python Programming",
-          "Mechanical Engineering",
-          "Electrical Engineering",
-          "Environmental Studies",
+          "MAC21",
+          "CYC22",
+          "PLC24",
+          "ETC25",
+          "HSCC26",
+          "HSCC18",
         ];
 
       case "Semester 3":
-        return [
-          "Data Structures",
-          "Object Oriented Programming",
-          "Discrete Mathematics",
-          "Database Systems",
-          "Digital Logic",
-          "Probability & Statistics",
-        ];
-
       case "Semester 4":
-        return [
-          "Operating Systems",
-          "Computer Networks",
-          "Java Programming",
-          "Design & Analysis of Algorithms",
-          "Artificial Intelligence",
-          "Software Engineering",
-        ];
-
       case "Semester 5":
-        return [
-          "Machine Learning",
-          "Cloud Computing",
-          "Mobile App Development",
-          "Cyber Security",
-          "Data Analytics",
-          "Web Technologies",
-        ];
-
       case "Semester 6":
-        return [
-          "Deep Learning",
-          "Computer Vision",
-          "Big Data Analytics",
-          "IoT",
-          "Data Mining",
-          "Natural Language Processing",
-        ];
-
       case "Semester 7":
-        return [
-          "Reinforcement Learning",
-          "DevOps",
-          "Blockchain",
-          "Data Visualization",
-          "Internship",
-          "Elective I",
-        ];
-
       case "Semester 8":
-        return [
-          "Major Project",
-          "Seminar",
-          "Internship",
-          "Elective II",
-          "Elective III",
-        ];
+        return [];
 
       default:
         return [];
@@ -102,18 +50,15 @@ class SemScreen extends StatelessWidget {
 
     return DefaultTabController(
       length: 2,
-
       child: Scaffold(
         backgroundColor: Colors.white,
 
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-
           iconTheme: const IconThemeData(
             color: Color(0xff6C63FF),
           ),
-
           title: Text(
             semester,
             style: const TextStyle(
@@ -137,9 +82,7 @@ class SemScreen extends StatelessWidget {
 
                 decoration: BoxDecoration(
                   color: const Color(0xffF6F3FF),
-
                   borderRadius: BorderRadius.circular(22),
-
                   border: Border.all(
                     color: const Color(0xffE7E2FF),
                   ),
@@ -162,7 +105,7 @@ class SemScreen extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     const Text(
-                      "Choose a category to explore resources.",
+                      "Choose Notes or PYQs.",
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 16,
@@ -183,13 +126,10 @@ class SemScreen extends StatelessWidget {
 
                 child: const TabBar(
                   indicatorColor: Color(0xff6C63FF),
-
                   labelColor: Color(0xff6C63FF),
-
                   unselectedLabelColor: Colors.grey,
 
                   tabs: [
-
                     Tab(
                       icon: Icon(Icons.menu_book_outlined),
                       text: "Notes",
@@ -204,26 +144,29 @@ class SemScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 20),
+
               Expanded(
                 child: TabBarView(
                   children: [
 
-                    // NOTES TAB
                     ListView.builder(
                       itemCount: subjects.length,
                       itemBuilder: (context, index) {
                         return SubjectTile(
                           subject: subjects[index],
+                          semester: semester,
+                          type: "notes",
                         );
                       },
                     ),
 
-                    // PYQs TAB
                     ListView.builder(
                       itemCount: subjects.length,
                       itemBuilder: (context, index) {
                         return SubjectTile(
                           subject: subjects[index],
+                          semester: semester,
+                          type: "pyqs",
                         );
                       },
                     ),
@@ -242,56 +185,44 @@ class SemScreen extends StatelessWidget {
 
 class SubjectTile extends StatelessWidget {
   final String subject;
+  final String semester;
+  final String type;
 
   const SubjectTile({
     super.key,
     required this.subject,
+    required this.semester,
+    required this.type,
   });
 
   IconData getIcon() {
     switch (subject) {
-      case "Mathematics I":
-      case "Mathematics II":
-      case "Discrete Mathematics":
+      case "MAC11":
+      case "MAC21":
+      
         return Icons.calculate_rounded;
 
-      case "Physics":
-      case "Chemistry":
+      case "PYC12":
+      case "CYC22":
         return Icons.science_rounded;
 
-      case "Programming in C":
-      case "Python Programming":
-      case "Java Programming":
-      case "Object Oriented Programming":
-      case "Web Technologies":
+      case "PSCCS14 in C":
+      case "PLC24":
+  
         return Icons.code_rounded;
 
-      case "Artificial Intelligence":
-      case "Machine Learning":
-      case "Deep Learning":
-      case "Natural Language Processing":
-      case "Computer Vision":
-      case "Reinforcement Learning":
-        return Icons.psychology_rounded;
 
-      case "Database Systems":
-      case "Data Mining":
-      case "Big Data Analytics":
-      case "Data Analytics":
-        return Icons.storage_rounded;
 
-      case "Operating Systems":
-      case "Computer Networks":
-      case "Cloud Computing":
-      case "Cyber Security":
-      case "Blockchain":
-      case "DevOps":
-        return Icons.computer_rounded;
+      case "Data Structures":
+        return Icons.account_tree_rounded;
 
-      case "Mobile App Development":
-        return Icons.phone_android_rounded;
+      case "Digital Logic":
+        return Icons.memory_rounded;
 
-      case "Engineering Graphics":
+      case "Probability & Statistics":
+        return Icons.bar_chart_rounded;
+
+      case "MELC19":
         return Icons.architecture_rounded;
 
       default:
@@ -319,6 +250,8 @@ class SubjectTile extends StatelessWidget {
             MaterialPageRoute(
               builder: (_) => SubjectScreen(
                 subject: subject,
+                semester: semester,
+                type: type,
               ),
             ),
           );
