@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'login.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -54,6 +55,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -136,7 +138,7 @@ class ProfileScreen extends StatelessWidget {
             profileTile(
               icon: Icons.email_outlined,
               title: "Email",
-              subtitle: "example@email.com",
+              subtitle: user?.email ?? "No Email",              
               iconColor: Colors.deepPurple,
             ),
 
@@ -168,9 +170,19 @@ class ProfileScreen extends StatelessWidget {
               height: 55,
 
               child: ElevatedButton.icon(
-                onPressed: () {
-                  // Firebase logout later
-                },
+                onPressed: () async {
+  await FirebaseAuth.instance.signOut();
+
+  if (context.mounted) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+      (route) => false,
+    );
+  }
+},
 
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xff6C63FF),

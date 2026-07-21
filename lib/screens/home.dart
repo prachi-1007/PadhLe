@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/semcard.dart';
 import 'about.dart';
 import 'fav.dart';
@@ -231,15 +231,17 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-          onTap: () {
-            Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(
-      builder: (_) => const LoginScreen(),
-    ),
-    (route) => false,
-  );// Firebase logout later
-          },
+       onTap: () async {
+  await FirebaseAuth.instance.signOut();
+
+  if (context.mounted) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/',
+      (route) => false,
+    );
+  }
+},
         ),
 
         
